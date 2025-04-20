@@ -5,8 +5,11 @@ import 'core/widgets/appbar.dart';
 import 'core/widgets/cart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopee/features/quote/bloc/quote_bloc.dart';
+import 'package:shopee/features/staff/bloc/staff_bloc.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:shopee/features/quote/presentation/pages/quote_page.dart';
+import 'package:shopee/features/staff/presentation/pages/staff_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -109,10 +112,10 @@ class _PromotionBannerState extends State<PromotionBanner> {
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: 'โกโก้ 9 บาท',
+                      hintText: 'ดีครับ',
                       border: InputBorder.none,
                       filled: true,
-                      fillColor: Colors.grey[200],
+                      fillColor: const Color.fromARGB(255, 160, 143, 143),
                       contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: IconButton(
@@ -124,8 +127,8 @@ class _PromotionBannerState extends State<PromotionBanner> {
                 ),
                 IconButton(
                   icon: const Icon(
-                    Icons.shopping_cart_outlined,
-                    color: Colors.white,
+                    Icons.percent,
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -137,7 +140,7 @@ class _PromotionBannerState extends State<PromotionBanner> {
                 IconButton(
                   icon: const Icon(
                     Icons.chat_outlined,
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 255, 22, 22),
                   ),
                   onPressed: () {},
                 ),
@@ -197,6 +200,16 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const QuotePage(),
             ),
           ));
+    }
+
+    if (_selectedIndex == 4) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                    create: (_) => StaffBloc(),
+                    child: const StaffPage(),
+                  )));
     }
   }
 

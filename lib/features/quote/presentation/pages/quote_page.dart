@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shopee/core/widgets/top_overlay_snackbar.dart'; // Ensure the path is correct
+import 'package:shopee/core/widgets/top_overlay_snackbar.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopee/features/quote/bloc/quote_bloc.dart';
@@ -14,6 +14,7 @@ class QuotePage extends StatefulWidget {
 }
 
 class _QuotePageState extends State<QuotePage> {
+  bool showList = false;
   void _showTopOverlay(String message) {
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
@@ -128,7 +129,23 @@ class _QuotePageState extends State<QuotePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("✨ Random Quote App")),
+      appBar: AppBar(
+        title: const Text("✨ Random Quote App"),
+        actions: [
+          IconButton(
+            icon: Icon(showList ? Icons.format_quote : Icons.list),
+            onPressed: () {
+              final bloc = context.read<QuoteBloc>();
+              if (!showList) {
+                bloc.add(GetListQuoteEvent());
+              }
+              setState(() {
+                showList = !showList;
+              });
+            },
+          )
+        ],
+      ),
       body: Stack(
         children: [
           Column(
@@ -139,31 +156,114 @@ class _QuotePageState extends State<QuotePage> {
                   child: BlocBuilder<QuoteBloc, QuoteState>(
                     builder: (context, state) {
                       if (state is QuoteInitial) {
-                        return const Center(
-                            child: Text("Press the button to get a quote"));
-                      } else if (state is QuoteLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (state is QuoteLoaded) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '"${state.quote}"',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontStyle: FontStyle.italic,
+                        return Center(
+                          child: Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                                color: Color.fromARGB(255, 184, 174, 174),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "- ${state.author}",
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ],
+                              child: const Center(
+                                  child: Text(
+                                "Random Quote",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                              ))),
                         );
-                      } else if (state is QuteError) {
-                        return Center(child: Text(state.message));
+                      } else if (state is QuoteLoading) {
+                        return Center(
+                          child: Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                                color: Color.fromARGB(255, 184, 174, 174),
+                              ),
+                              child: const Center(
+                                  child: CircularProgressIndicator(
+                                      color: Color.fromARGB(
+                                255,
+                                255,
+                                255,
+                                255,
+                              )))),
+                        );
+                      } else if (state is QuoteLoaded) {
+                        return Container(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            color: Color.fromARGB(255, 184, 174, 174),
+                          ),
+                          child: Center(
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '"${state.quote}"',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontStyle: FontStyle.italic,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "- ${state.author}",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                              ),
+                            ],
+                          )),
+                        );
+                      } else if (showList) {
+                        if (state is ListQuoteLoaded) {
+                          return Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                                color: Color.fromARGB(255, 184, 174, 174),
+                              ),
+                              child: Center(
+                                  child: Padding(
+                                padding: const EdgeInsets.only(top: 40),
+                                child: ListView.separated(
+                                    itemCount: state.quotes.length,
+                                    separatorBuilder: (_, __) =>
+                                        const Divider(),
+                                    itemBuilder: (context, index) {
+                                      final quote = state.quotes[index]
+                                          as Map<String, dynamic>;
+                                      return ListTile(
+                                        leading: const Icon(Icons.format_quote),
+                                        title: Text('"${quote["quote"]}"'),
+                                        subtitle: Text('- ${quote["author"]}'),
+                                        textColor: const Color.fromARGB(
+                                            255, 255, 255, 255),
+                                      );
+                                    }),
+                              )));
+                        }
+                      } else {
+                        return Center(
+                            child: Container(
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12)),
+                                  color: Color.fromARGB(255, 184, 174, 174),
+                                ),
+                                child: const Center(
+                                    child: Text(
+                                        "Press the button to get a quote"))));
                       }
                       return const SizedBox.shrink();
                     },
@@ -185,12 +285,12 @@ class _QuotePageState extends State<QuotePage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.arrow_upward,
                         color: Colors.blue,
                         size: 30,
                       ),
-                      const SizedBox(height: 8),
+                      
                       Text(
                         "Swipe up to add a new quote",
                         style: TextStyle(
@@ -206,14 +306,17 @@ class _QuotePageState extends State<QuotePage> {
               )
             ],
           ),
-          Positioned(
-            left: 20,
+          Align(
+            alignment: Alignment.topCenter,
             child: FloatingActionButton(
               onPressed: () {
                 context.read<QuoteBloc>().add(GetRandomQuoteEvent());
+                setState(() {
+                  showList = false;
+                });
               },
-              child: const Icon(Icons.refresh),
               backgroundColor: const Color.fromARGB(255, 211, 211, 211),
+              child: const Icon(Icons.refresh),
             ),
           ),
         ],

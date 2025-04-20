@@ -33,8 +33,11 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
 
     on<PostRandomQuoteEvent>((event, emit) {
       _quotes.add({"quote": event.quote, "author": event.author});
-      add(GetRandomQuoteEvent());
+      add(GetListQuoteEvent());
     });
 
+    on<GetListQuoteEvent>((event, emit) {
+      emit(ListQuoteLoaded(List.from(_quotes)));
+    });
   }
 }

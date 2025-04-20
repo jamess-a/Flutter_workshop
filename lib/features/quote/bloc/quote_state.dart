@@ -15,3 +15,8 @@ class QuteError extends QuoteState {
   final String message;
   QuteError(this.message);
 }
+
+class ListQuoteLoaded extends QuoteState {
+  final List<Map<String, String>> quotes;
+  ListQuoteLoaded(this.quotes);
+}

@@ -10,3 +10,5 @@ class PostRandomQuoteEvent extends QuoteEvent {
 }
 
 class EditRandomQuoteEvent extends QuoteEvent {}
+
+class GetListQuoteEvent extends QuoteEvent {}
