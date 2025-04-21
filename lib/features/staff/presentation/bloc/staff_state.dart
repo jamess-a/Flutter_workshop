@@ -1,4 +1,4 @@
-import '../model/staff_model.dart';
+import 'package:shopee/features/staff/domain/entities/staff.dart';
 
 abstract class StaffState {}
 

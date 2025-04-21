@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shopee/core/widgets/top_overlay_snackbar.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopee/features/quote/bloc/quote_bloc.dart';
-import 'package:shopee/features/quote/bloc/quote_event.dart';
-import 'package:shopee/features/quote/bloc/quote_state.dart';
+import 'package:shopee/features/quote/presentation/bloc/quote_bloc.dart';
+import 'package:shopee/features/quote/presentation/bloc/quote_event.dart';
+import 'package:shopee/features/quote/presentation/bloc/quote_state.dart';
 
 class QuotePage extends StatefulWidget {
   const QuotePage({super.key});

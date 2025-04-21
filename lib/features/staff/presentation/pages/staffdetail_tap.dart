@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../model/staff_model.dart';
+import 'package:shopee/features/staff/domain/entities/staff.dart';
+import '../../data/models/staff_model.dart';
 
 class StaffDetail extends StatelessWidget {
   final Staff staff;
@@ -42,9 +43,18 @@ class StaffDetail extends StatelessWidget {
             subtitle: Text(staff.email ?? 'No email'),
           ),
           const SizedBox(height: 20),
-          Text('Phone: ${staff.phone ?? "N/A"}'),
-          Text('Position: ${staff.roleName ?? "N/A"}'),
-          Text('Uid: ${staff.uid ?? "N/A"}'),
+          Container(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Phone: ${staff.phone ?? "N/A"}'),
+              Text('Position: ${staff.roleName ?? "N/A"}'),
+              Text('Uid: ${staff.uid ?? "N/A"}'),
+              Text('Height: ${staff.height ?? "N/A"} M'),
+              Text('Ages: ${staff.age ?? "N/A"} '),
+            ],
+          ))
         ],
       ),
     );
